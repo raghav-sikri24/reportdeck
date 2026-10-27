@@ -1,0 +1,661 @@
+/*
+ * reportdeck styles. Import once: `import 'reportdeck/styles.css'`.
+ * Every color/size is a CSS variable — override them on `.rd-root`
+ * (or `.rd-light` / `.rd-dark`) to match your design system.
+ */
+
+.rd-light {
+  color-scheme: light;
+  --rd-surface: #fcfcfb;
+  --rd-page: #f9f9f7;
+  --rd-ink: #0b0b0b;
+  --rd-ink-2: #52514e;
+  --rd-ink-3: #6b6a66;
+  --rd-grid: #e1e0d9;
+  --rd-axis: #c3c2b7;
+  --rd-border: rgba(11, 11, 11, 0.1);
+  --rd-hover: rgba(11, 11, 11, 0.045);
+  --rd-pressed: rgba(11, 11, 11, 0.08);
+  --rd-accent: #2a78d6;
+  --rd-focus: #2a78d6;
+  --rd-good: #006300;
+  --rd-bad: #d03b3b;
+  --rd-spark: #a9a79f;
+  --rd-skeleton: #efeee9;
+  --rd-skeleton-shine: #f7f6f2;
+  --rd-shadow: 0 1px 2px rgba(11, 11, 11, 0.04);
+  --rd-menu-shadow: 0 8px 28px rgba(11, 11, 11, 0.14);
+}
+
+.rd-dark {
+  color-scheme: dark;
+  --rd-surface: #1a1a19;
+  --rd-page: #0d0d0d;
+  --rd-ink: #f0efec;
+  --rd-ink-2: #c3c2b7;
+  --rd-ink-3: #a3a199;
+  --rd-grid: #2c2c2a;
+  --rd-axis: #383835;
+  --rd-border: rgba(255, 255, 255, 0.1);
+  --rd-hover: rgba(255, 255, 255, 0.06);
+  --rd-pressed: rgba(255, 255, 255, 0.1);
+  --rd-accent: #3987e5;
+  --rd-focus: #5598e7;
+  --rd-good: #0ca30c;
+  --rd-bad: #ef6b6b;
+  --rd-spark: #6b6a66;
+  --rd-skeleton: #242422;
+  --rd-skeleton-shine: #2c2c2a;
+  --rd-shadow: none;
+  --rd-menu-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+}
+
+.rd-root {
+  --rd-radius: 12px;
+  --rd-radius-sm: 8px;
+  --rd-gap: 16px;
+  --rd-pad: 16px;
+  font-family: var(--rd-font, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif);
+  color: var(--rd-ink);
+  font-size: 14px;
+  line-height: 1.45;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+.rd-root *,
+.rd-root *::before,
+.rd-root *::after {
+  box-sizing: inherit;
+}
+
+/* ---------- card ---------- */
+.rd-card {
+  position: relative;
+  min-width: 0;
+  background: var(--rd-surface);
+  border: 1px solid var(--rd-border);
+  border-radius: var(--rd-radius);
+  padding: var(--rd-pad);
+  box-shadow: var(--rd-shadow);
+}
+.rd-bare {
+  min-width: 0;
+}
+.rd-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.rd-card__heading {
+  min-width: 0;
+}
+.rd-card__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--rd-ink);
+  overflow-wrap: anywhere;
+}
+.rd-card__subtitle {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--rd-ink-2);
+  overflow-wrap: anywhere;
+}
+.rd-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.rd-card__body {
+  position: relative;
+  transition: opacity 160ms ease;
+}
+.rd-card__footer {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--rd-ink-3);
+}
+/* Refetch keeps the frame: dim the last render instead of flashing a skeleton. */
+.is-refreshing {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* ---------- buttons ---------- */
+.rd-icon-button,
+.rd-button,
+.rd-link {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.rd-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--rd-radius-sm);
+  background: transparent;
+  color: var(--rd-ink-2);
+}
+.rd-icon-button:hover:not(:disabled) {
+  background: var(--rd-hover);
+  color: var(--rd-ink);
+}
+.rd-icon-button[aria-pressed='true'],
+.rd-icon-button[aria-expanded='true'] {
+  background: var(--rd-pressed);
+  color: var(--rd-ink);
+}
+.rd-icon-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.rd-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--rd-border);
+  border-radius: var(--rd-radius-sm);
+  background: var(--rd-surface);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--rd-ink);
+  white-space: nowrap;
+}
+.rd-button:hover:not(:disabled) {
+  background: var(--rd-hover);
+}
+.rd-button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.rd-link {
+  border: 0;
+  background: none;
+  padding: 0;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.rd-root :focus-visible {
+  outline: 2px solid var(--rd-focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ---------- menu ---------- */
+.rd-menu {
+  position: relative;
+}
+.rd-menu__list {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 30;
+  min-width: 196px;
+  padding: 4px;
+  background: var(--rd-surface);
+  border: 1px solid var(--rd-border);
+  border-radius: 10px;
+  box-shadow: var(--rd-menu-shadow);
+}
+.rd-menu__item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  color: var(--rd-ink);
+  text-align: left;
+  cursor: pointer;
+}
+.rd-menu__item:hover,
+.rd-menu__item:focus-visible {
+  background: var(--rd-hover);
+  outline: none;
+}
+.rd-menu__ext {
+  color: var(--rd-ink-3);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- states ---------- */
+.rd-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px;
+  text-align: center;
+  color: var(--rd-ink-3);
+}
+.rd-state__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--rd-ink-2);
+}
+.rd-state__detail {
+  margin: 0 0 6px;
+  font-size: 12px;
+  max-width: 40ch;
+  overflow-wrap: anywhere;
+}
+.rd-state--error svg {
+  color: var(--rd-bad);
+}
+.rd-stale {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  border-radius: var(--rd-radius-sm);
+  background: var(--rd-hover);
+  font-size: 12px;
+  color: var(--rd-ink-2);
+}
+.rd-stale svg {
+  color: var(--rd-bad);
+  flex-shrink: 0;
+}
+
+.rd-skeleton {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--rd-radius-sm);
+}
+.rd-skeleton__bars {
+  position: absolute;
+  inset: 12px 8px 8px;
+  display: flex;
+  align-items: flex-end;
+  gap: 6%;
+}
+.rd-skeleton__bars span {
+  flex: 1;
+  max-width: 28px;
+  margin: 0 auto;
+  border-radius: 4px 4px 0 0;
+  background: var(--rd-skeleton);
+}
+.rd-skeleton__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 0;
+}
+.rd-skeleton__rows span {
+  height: 14px;
+  border-radius: 4px;
+  background: var(--rd-skeleton);
+}
+.rd-skeleton__rows span:nth-child(odd) {
+  width: 85%;
+}
+.rd-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--rd-skeleton-shine), transparent);
+  transform: translateX(-100%);
+  animation: rd-shimmer 1.4s ease-in-out infinite;
+  opacity: 0.7;
+}
+@keyframes rd-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+.rd-spin {
+  animation: rd-spin 0.8s linear infinite;
+}
+@keyframes rd-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- table ---------- */
+.rd-table__scroll {
+  overflow: auto;
+  border-radius: var(--rd-radius-sm);
+  transition: opacity 160ms ease;
+}
+.rd-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+}
+.rd-table th,
+.rd-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--rd-grid);
+  vertical-align: top;
+}
+.rd-table--compact th,
+.rd-table--compact td {
+  padding: 6px 10px;
+}
+.rd-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--rd-surface);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--rd-ink-2);
+  white-space: nowrap;
+  border-bottom-color: var(--rd-axis);
+}
+.rd-table td {
+  color: var(--rd-ink);
+  overflow-wrap: anywhere;
+}
+.rd-table td.is-numeric {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.rd-table tbody tr:hover td {
+  background: var(--rd-hover);
+}
+.rd-table tbody tr.is-clickable {
+  cursor: pointer;
+}
+.rd-table__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: -2px -4px;
+  padding: 2px 4px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.rd-table__sort.is-right {
+  flex-direction: row-reverse;
+}
+.rd-table__sort:hover {
+  color: var(--rd-ink);
+  background: var(--rd-hover);
+}
+.rd-table__nomatch {
+  text-align: center;
+  color: var(--rd-ink-3);
+  padding: 24px 12px;
+}
+.rd-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--rd-ink-3);
+}
+.rd-pagination__info {
+  margin-right: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.rd-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--rd-border);
+  border-radius: var(--rd-radius-sm);
+  color: var(--rd-ink-3);
+  background: var(--rd-surface);
+}
+.rd-search input {
+  width: 140px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  color: var(--rd-ink);
+}
+.rd-search:focus-within {
+  outline: 2px solid var(--rd-focus);
+  outline-offset: 1px;
+}
+
+/* ---------- stats ---------- */
+.rd-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.rd-stat__label {
+  margin: 0;
+  font-size: 13px;
+  color: var(--rd-ink-2);
+}
+.rd-stat__row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+.rd-stat__value {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--rd-ink);
+  overflow-wrap: anywhere;
+}
+.rd-stat--hero .rd-stat__value {
+  font-size: 52px;
+  line-height: 1.05;
+}
+.rd-stat__delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 2px 0 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--rd-ink-3);
+}
+.rd-stat__delta.is-good {
+  color: var(--rd-good);
+}
+.rd-stat__delta.is-bad {
+  color: var(--rd-bad);
+}
+.rd-stat__compare {
+  margin-left: 2px;
+  font-weight: 400;
+  color: var(--rd-ink-3);
+}
+.rd-stat__hint {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--rd-ink-3);
+}
+.rd-stat__error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--rd-ink-2);
+}
+.rd-stat__error svg {
+  color: var(--rd-bad);
+}
+.rd-stat__stale {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--rd-ink-3);
+}
+.rd-stat__stale svg {
+  color: var(--rd-bad);
+  flex-shrink: 0;
+}
+.rd-stat__skeleton {
+  height: 34px;
+  width: 60%;
+  margin-top: 4px;
+  border-radius: 6px;
+  background: var(--rd-skeleton);
+}
+.rd-sparkline {
+  flex-shrink: 0;
+  overflow: visible;
+}
+.rd-sparkline__line {
+  stroke: var(--rd-spark);
+}
+.rd-sparkline__dot {
+  fill: var(--rd-accent);
+  stroke: var(--rd-surface);
+  stroke-width: 2;
+}
+.rd-stat-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: var(--rd-gap, 16px);
+}
+
+/* ---------- report layout ---------- */
+.rd-report {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.rd-report__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+.rd-report__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--rd-ink);
+}
+.rd-report__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.rd-report__grid {
+  container-type: inline-size;
+  display: grid;
+  gap: var(--rd-gap);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+}
+.rd-report__grid--fixed {
+  grid-template-columns: repeat(var(--rd-columns, 2), minmax(0, 1fr));
+}
+.rd-span-full,
+.rd-span-2 {
+  grid-column: 1 / -1;
+}
+/* Only span two tracks when two tracks actually exist (no implicit overflow column). */
+@container (min-width: 856px) {
+  .rd-span-2 {
+    grid-column: span 2;
+  }
+}
+@media (max-width: 720px) {
+  .rd-report__grid--fixed {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .rd-root {
+    --rd-pad: 12px;
+  }
+  .rd-card__header {
+    flex-wrap: wrap;
+  }
+  .rd-stat--hero .rd-stat__value {
+    font-size: 40px;
+  }
+}
+
+.rd-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rd-skeleton::after,
+  .rd-spin {
+    animation: none;
+  }
+  .rd-card__body,
+  .rd-table__scroll {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .rd-card,
+  .rd-menu__list,
+  .rd-button,
+  .rd-search {
+    border-color: CanvasText;
+  }
+  .rd-stat__delta.is-good,
+  .rd-stat__delta.is-bad {
+    color: CanvasText;
+  }
+}
+
+@media print {
+  .rd-card__actions,
+  .rd-report__actions,
+  .rd-pagination {
+    display: none !important;
+  }
+  .rd-card {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+}

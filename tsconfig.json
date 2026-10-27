@@ -1,0 +1,50 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": false,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "types": [
+      "node"
+    ],
+    "paths": {
+      "reportdeck": [
+        "./src/index.ts"
+      ],
+      "reportdeck/core": [
+        "./src/core/index.ts"
+      ],
+      "reportdeck/export": [
+        "./src/export/index.ts"
+      ],
+      "reportdeck/server": [
+        "./src/server/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "src",
+    "test",
+    "playground/src",
+    "tsup.config.ts",
+    "vitest.config.ts",
+    "playground/vite.config.ts"
+  ]
+}
