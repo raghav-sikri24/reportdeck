@@ -293,15 +293,14 @@ pnpm verify         # lint, typecheck, tests, build, package checks
 
 ## Publishing
 
-1. Create an npm access token (Automation) and add it to the repository secrets as `NPM_TOKEN`.
-2. Bump the version, update `CHANGELOG.md`, and push a tag:
+Releases are automated with [npm trusted publishing](https://docs.npmjs.com/trusted-publishers): GitHub Actions authenticates to npm with OIDC, so there is no npm token to store or rotate, and every release gets a signed provenance statement.
 
 ```bash
-npm version patch
-git push --follow-tags
+npm version patch          # or minor / major — updates package.json and creates a v* tag
+git push --follow-tags     # the Release workflow verifies, publishes to npm and creates a GitHub release
 ```
 
-The release workflow verifies everything and publishes to npm with provenance.
+Update `CHANGELOG.md` before bumping. The npm-side configuration (package → Settings → Trusted publishing) points at `raghav-sikri24/reportdeck` and `.github/workflows/release.yml`; if you rename the workflow file, update it there too.
 
 ## License
 

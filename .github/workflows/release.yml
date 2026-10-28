@@ -1,12 +1,17 @@
 name: Release
 
+# Publishes to npm when a version tag (v1.2.3) is pushed.
+# Uses npm trusted publishing (OIDC): no NPM_TOKEN secret, and npm adds
+# provenance automatically because the repository and package are public.
+# The npm-side trust configuration must name this exact file: release.yml
+
 on:
   push:
     tags: ['v*']
 
 permissions:
-  contents: write
-  id-token: write # npm provenance
+  contents: write # create the GitHub release
+  id-token: write # npm trusted publishing (OIDC)
 
 jobs:
   publish:
@@ -16,9 +21,11 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: pnpm
           registry-url: https://registry.npmjs.org
+      # Trusted publishing needs npm >= 11.5.1.
+      - run: npm install -g npm@latest
       - run: pnpm install --frozen-lockfile
       - run: pnpm run verify
       - name: Check tag matches package version
@@ -28,9 +35,7 @@ jobs:
             echo "Tag $GITHUB_REF_NAME does not match package.json version $VERSION" >&2
             exit 1
           fi
-      - run: npm publish --provenance --access public --ignore-scripts
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish --access public --ignore-scripts
       - uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
