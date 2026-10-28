@@ -153,6 +153,9 @@ export function categoryAxisLabel(ctx: BuildContext, maxWidth = 96) {
   return {
     color: ctx.tokens.inkMuted,
     fontSize: 11,
+    // Try every label and hide only those that truly collide. ECharts' default
+    // 'auto' interval measures untruncated text and skips labels that would fit.
+    interval: 0,
     hideOverlap: true,
     width: maxWidth,
     overflow: 'truncate' as const,

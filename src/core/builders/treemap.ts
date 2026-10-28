@@ -91,6 +91,8 @@ export function buildTreemap(config: TreemapConfig, ctx: BuildContext): ChartMod
       {
         type: 'treemap',
         id: 'treemap',
+        // Treemap fades labels with its own update duration; honor reduced motion.
+        animationDurationUpdate: ctx.animation ? 600 : 0,
         name: humanize(config.value),
         roam: false,
         nodeClick: false,

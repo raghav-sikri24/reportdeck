@@ -61,8 +61,23 @@ function clampSize(n: number): number {
   return Number.isFinite(n) ? Math.min(8000, Math.max(50, Math.round(n))) : 480;
 }
 
+/**
+ * A fully static copy of the option. Some series (treemap) animate labels via
+ * their own `animationDurationUpdate` even when `animation` is false, so every
+ * duration is zeroed per series too — otherwise exports capture half-faded text.
+ */
 function staticOption(option: EChartsCoreOption, background: string): EChartsCoreOption {
-  return { ...option, animation: false, backgroundColor: background };
+  const series = option.series;
+  const still = (s: unknown) =>
+    typeof s === 'object' && s !== null ? { ...s, animation: false, animationDuration: 0, animationDurationUpdate: 0 } : s;
+  return {
+    ...option,
+    animation: false,
+    animationDuration: 0,
+    animationDurationUpdate: 0,
+    backgroundColor: background,
+    series: Array.isArray(series) ? series.map(still) : series ? still(series) : series,
+  };
 }
 
 /** Renders an option to a PNG or JPEG data URL using an off-screen canvas. Browser only. */
@@ -90,6 +105,8 @@ export async function renderToImage(
     const chart = init(host, null, { renderer: 'canvas', width: r.width, height: r.height });
     try {
       chart.setOption(staticOption(option, r.background), { notMerge: true });
+      // Some series (e.g. treemap labels) lay out on the next frame; render it now.
+      chart.getZr().flush();
       if (!r.title && type === 'png' && r.padding === 0) {
         return chart.getDataURL({ type: 'png', pixelRatio: r.pixelRatio, backgroundColor: r.background });
       }

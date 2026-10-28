@@ -8,6 +8,11 @@ Point a chart at an API endpoint and get loading, error, empty and refresh state
 <BarChart title="Revenue by month" query="/api/revenue" x="month" series={['revenue', 'cost']} format="currency" />
 ```
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/gallery-dark.png" />
+  <img alt="All reportdeck chart types: line, area, bar, horizontal bar, 100% stacked bar, combo, donut, waterfall, funnel, heatmap, bubble, radar, treemap, sankey and gauge" src="docs/images/gallery-light.png" />
+</picture>
+
 - **14 chart types** — line, area, bar (grouped / stacked / 100% / horizontal), combo, pie, donut, scatter/bubble, heatmap, radar, funnel, gauge, treemap, sankey, waterfall — plus KPI stat cards with sparklines and a sortable, searchable, paginated data table.
 - **Data from your backend** — built-in fetching with caching, request de-duplication, retries with backoff, timeouts, polling, race-free param changes and "keep previous data while refreshing". Works with any API shape via `select`, or bring your own fetcher (axios, GraphQL…).
 - **Messy data handled** — `"1,234.50"`, `"₹ 1,23,456"`, `"12%"`, `"(42)"`, nulls, unsorted or invalid dates, the date-only timezone bug, a single data point, 100k points, long labels, negative stacks, too many slices, sankey cycles.
