@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented here. This project follows [Semantic Versioning](https://semver.org/).
 
+## 0.1.1 — 2026-10-29
+
+No changes to the library itself.
+
+- Releases are now published from GitHub Actions with npm trusted publishing, so every version carries a signed provenance statement.
+- `npm publish --dry-run` works again: `prepublishOnly` no longer runs the packing check (CI still does).
+
 ## 0.1.0 — 2026-10-28
 
 Initial release.
