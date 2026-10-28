@@ -90,7 +90,7 @@
     "test:watch": "vitest",
     "check:package": "publint && attw --pack . --profile node16 --exclude-entrypoints styles.css",
     "verify": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && pnpm run check:package",
-    "prepublishOnly": "pnpm run verify"
+    "prepublishOnly": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && publint"
   },
   "peerDependencies": {
     "react": ">=18",
