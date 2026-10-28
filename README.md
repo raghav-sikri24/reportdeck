@@ -9,8 +9,8 @@ Point a chart at an API endpoint and get loading, error, empty and refresh state
 ```
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/gallery-dark.png" />
-  <img alt="All reportdeck chart types: line, area, bar, horizontal bar, 100% stacked bar, combo, donut, waterfall, funnel, heatmap, bubble, radar, treemap, sankey and gauge" src="docs/images/gallery-light.png" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/raghav-sikri24/reportdeck/main/docs/images/gallery-dark.png" />
+  <img alt="All reportdeck chart types: line, area, bar, horizontal bar, 100% stacked bar, combo, donut, waterfall, funnel, heatmap, bubble, radar, treemap, sankey and gauge" src="https://raw.githubusercontent.com/raghav-sikri24/reportdeck/main/docs/images/gallery-light.png" />
 </picture>
 
 - **14 chart types** — line, area, bar (grouped / stacked / 100% / horizontal), combo, pie, donut, scatter/bubble, heatmap, radar, funnel, gauge, treemap, sankey, waterfall — plus KPI stat cards with sparklines and a sortable, searchable, paginated data table.
@@ -293,9 +293,8 @@ pnpm verify         # lint, typecheck, tests, build, package checks
 
 ## Publishing
 
-1. Create the GitHub repository, then update `repository`, `homepage` and `bugs` in `package.json`.
-2. Create an npm access token (Automation) and add it to the repository secrets as `NPM_TOKEN`.
-3. Bump the version, update `CHANGELOG.md`, and push a tag:
+1. Create an npm access token (Automation) and add it to the repository secrets as `NPM_TOKEN`.
+2. Bump the version, update `CHANGELOG.md`, and push a tag:
 
 ```bash
 npm version patch

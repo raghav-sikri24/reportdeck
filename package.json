@@ -14,13 +14,13 @@
     "excel",
     "csv"
   ],
-  "homepage": "https://github.com/YOUR_GITHUB_USERNAME/reportdeck#readme",
+  "homepage": "https://github.com/raghav-sikri24/reportdeck#readme",
   "bugs": {
-    "url": "https://github.com/YOUR_GITHUB_USERNAME/reportdeck/issues"
+    "url": "https://github.com/raghav-sikri24/reportdeck/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YOUR_GITHUB_USERNAME/reportdeck.git"
+    "url": "git+https://github.com/raghav-sikri24/reportdeck.git"
   },
   "author": "Raghav Sikri <raghav2420@gmail.com>",
   "license": "MIT",
