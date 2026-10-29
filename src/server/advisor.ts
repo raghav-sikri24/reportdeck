@@ -376,7 +376,11 @@ export function createChartAdvisor(options: ChartAdvisorOptions): (request: Requ
       const result = await suggestCharts(body as { profile: unknown }, options);
       return json(200, result);
     } catch (error) {
-      options.onError?.(error);
+      // Server-side failures (missing SDK, bad key, provider outage) are logged
+      // by default so they're never silently swallowed; the browser only gets a generic message.
+      const status = error instanceof AdvisorError ? error.status : 500;
+      if (options.onError) options.onError(error);
+      else if (status >= 500) console.error('[reportdeck] chart advisor:', error);
       if (error instanceof AdvisorError) {
         // Client mistakes are safe to describe; provider failures stay generic.
         return json(error.status, { error: error.status < 500 ? error.message : 'AI suggestions are unavailable right now.' });

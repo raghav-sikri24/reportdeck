@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented here. This project follows [Semantic Versioning](https://semver.org/).
 
+## Unreleased
+
+- `createChartAdvisor` now logs server-side failures (missing provider SDK, invalid key, provider outage) to the server console when no `onError` is given, instead of failing silently. The browser still only receives a generic message.
+
 ## 0.2.0 — 2026-10-29
 
 - **`<AutoChart>`**: give it raw rows and it profiles the data, aggregates it, and picks the best chart — or shows the options first (`mode="suggest"`). Users can switch views or ask for one in plain words.

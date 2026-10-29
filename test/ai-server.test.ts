@@ -116,6 +116,14 @@ describe('createChartAdvisor HTTP handler', () => {
     expect(generate).not.toHaveBeenCalled();
   });
 
+  it('logs server-side failures by default and when onError is not set', async () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const res = await createChartAdvisor({ provider: 'openai-compatible' })(post({ profile: fullProfile }));
+    expect(res.status).toBe(500);
+    expect(String(spy.mock.calls[0]![1])).toMatch(/baseURL/);
+    spy.mockRestore();
+  });
+
   it('hides provider error details from the browser', async () => {
     const failing = createChartAdvisor({ provider: { generate: async () => { throw new Error('secret upstream detail: key sk-123'); } } });
     const res = await failing(post({ profile: fullProfile }));
