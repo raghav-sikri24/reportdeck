@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   AreaChart,
+  AutoChart,
   BarChart,
   ComboChart,
   DataTable,
@@ -54,6 +55,10 @@ function Dashboard({ range }: { range: number }) {
         <StatCard label="Churn rate" value={k?.churn.value} previous={k?.churn.previous} format="percent" goodDirection="down" trend={k?.churn.trend} comparisonLabel="vs previous period" loading={kpis.isLoading} error={kpis.error} />
         <StatCard label="Avg. order value" value="12,480.50" previous={11950} format="currency" comparisonLabel="vs previous period" />
       </StatGroup>
+
+      <AutoChart query="/api/payments" advisor="/api/chart-advisor" span="full" rememberAs="playground-payments" />
+
+      <AutoChart query="/api/payments" advisor="/api/chart-advisor" mode="suggest" span="full" />
 
       <ComboChart
         title="Revenue vs target"

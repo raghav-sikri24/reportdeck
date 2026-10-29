@@ -9,6 +9,8 @@ export type { ImageRenderOptions } from '../export/image';
 export { buildWorkbook, sanitizeSheetName } from '../export/excel';
 export type { ExcelOptions, SheetSpec, WorkbookResult } from '../export/excel';
 export { buildPdf, toPdfSafeText } from '../export/pdf';
+export { AdvisorError, createChartAdvisor, DEFAULT_MODELS, parseModelJson, sanitizeProfile, suggestCharts } from './advisor';
+export type { AdvisorResult, BuiltInProvider, ChartAdvisorOptions, CustomProvider, ProviderRequest } from './advisor';
 export type { PdfBlock, PdfFont, PdfOptions, PdfStat } from '../export/pdf';
 
 let registered = false;

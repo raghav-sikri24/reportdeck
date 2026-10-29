@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented here. This project follows [Semantic Versioning](https://semver.org/).
 
+## 0.2.0 — 2026-10-29
+
+- **`<AutoChart>`**: give it raw rows and it profiles the data, aggregates it, and picks the best chart — or shows the options first (`mode="suggest"`). Users can switch views or ask for one in plain words.
+- **Built-in recommender** (`recommendCharts`): free, instant, offline rules for trends, rankings, shares, relationships, flows, funnels, heatmaps, hierarchies and KPIs; understands requests like "share of revenue by channel, last 3 months".
+- **AI advisor** (`createChartAdvisor` / `suggestCharts` in `reportdeck/server`): Gemini, OpenAI, Claude, any OpenAI-compatible server, or a custom model. API keys stay on your server; only a data profile is sent (`privacy`: `schema` / `summary` / `sample`, enforced server-side). Answers are validated, repaired or rejected; failures fall back to the built-in rules. The provider SDKs are optional peer dependencies.
+- **Data reshaping** (`applyTransform`): time buckets, group & aggregate, last-N-periods, top N + "Other", long → wide pivots; partial final periods are flagged.
+
 ## 0.1.1 — 2026-10-29
 
 No changes to the library itself.

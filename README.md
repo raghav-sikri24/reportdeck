@@ -13,6 +13,7 @@ Point a chart at an API endpoint and get loading, error, empty and refresh state
   <img alt="All reportdeck chart types: line, area, bar, horizontal bar, 100% stacked bar, combo, donut, waterfall, funnel, heatmap, bubble, radar, treemap, sankey and gauge" src="https://raw.githubusercontent.com/raghav-sikri24/reportdeck/main/docs/images/gallery-light.png" />
 </picture>
 
+- **AI chart picker** — `<AutoChart>` takes raw rows, picks the right chart on its own (or offers options), and answers requests like "monthly fees by merchant category". Built-in rules work offline; Gemini, OpenAI or Claude can refine them through your backend, with your API key kept server-side and only a data summary sent.
 - **14 chart types** — line, area, bar (grouped / stacked / 100% / horizontal), combo, pie, donut, scatter/bubble, heatmap, radar, funnel, gauge, treemap, sankey, waterfall — plus KPI stat cards with sparklines and a sortable, searchable, paginated data table.
 - **Data from your backend** — built-in fetching with caching, request de-duplication, retries with backoff, timeouts, polling, race-free param changes and "keep previous data while refreshing". Works with any API shape via `select`, or bring your own fetcher (axios, GraphQL…).
 - **Messy data handled** — `"1,234.50"`, `"₹ 1,23,456"`, `"12%"`, `"(42)"`, nulls, unsorted or invalid dates, the date-only timezone bug, a single data point, 100k points, long labels, negative stacks, too many slices, sankey cycles.
@@ -165,6 +166,82 @@ Line, area, bar, combo, pie and waterfall charts also take `labels` (`'auto'` la
 | `onEvents`, `onChartReady` | — | ECharts events and instance access. |
 | `renderer` | `'canvas'` | `'svg'` for crisp DOM-based output. |
 | `fileName` | title | Download file name. |
+
+## AI chart picker (`AutoChart`)
+
+Give `AutoChart` raw rows — even one row per transaction — and it decides how to show them: it profiles the columns, aggregates the data, picks the best chart, and lets the user switch views or ask for one in plain words ("monthly fees by merchant category, last quarter").
+
+```tsx
+<AutoChart query="/v1/payments" />                                   // built-in rules: free, instant, offline
+<AutoChart query="/v1/payments" advisor="/api/chart-advisor" />      // rules + an AI model, through your backend
+<AutoChart data={rows} mode="suggest" />                             // show the options first, let the user pick
+```
+
+How a view is chosen:
+
+1. **Profile** — each column is classified (number, date, category, id, …) with counts, ranges and common labels.
+2. **Rules** — built-in rules suggest views immediately: time + number → trend, category + number → ranked bars, ≤ 6 parts → donut, two numbers → scatter, source/target → sankey, stages → funnel, and so on. Typed requests re-rank them ("share", "compare", "trend", "last 3 months", column names…).
+3. **AI (optional)** — your backend sends the profile to Gemini, OpenAI or Claude, which returns structured suggestions. In `auto` mode the AI gets about 4 seconds to make the first pick; after that the rule-based pick shows and AI suggestions join the picker when they arrive. A view already on screen is never swapped out by a late answer.
+4. **Validation** — every suggestion, from rules or AI, is checked against the real columns: invented columns are dropped, impossible charts are repaired (a pie with negative values becomes a bar) or rejected. If the AI is down, slow or returns nonsense, the built-in suggestions are shown instead.
+5. **Reshaping** — the chosen view's aggregation (time buckets, group & sum, top N + "Other", one series per category) runs locally on the full data. A partial last period is called out ("The last week is still in progress") so it doesn't read as a drop.
+
+| Prop | Default | |
+|---|---|---|
+| `data` / `query` | — | Raw rows, or a query to fetch them. |
+| `mode` | `'auto'` | `'auto'` shows the best view with a "Change view" picker; `'suggest'` shows the options first. |
+| `advisor` | — | Your backend endpoint (below). Omit for rules only. |
+| `privacy` | `'summary'` | What the AI may see: `'schema'` (names and types only), `'summary'` (plus ranges and common labels), `'sample'` (plus 5 example rows). |
+| `ask` | `true` | Show the "Ask for a view" box. |
+| `question` | — | Start with a request. |
+| `maxSuggestions` | `4` | Views offered (1–6). |
+| `rememberAs` | — | Remember the user's choice in this browser. |
+| `spec` / `onSpecChange` | — | Control the view, or save it (e.g. per user, server-side). |
+
+### The AI backend — your API key never reaches the browser
+
+The browser only ever calls **your** endpoint, and only sends the data profile. Install the SDK for the provider you use (`npm install @google/genai`, `openai` or `@anthropic-ai/sdk`) and add a route:
+
+```ts
+// app/api/chart-advisor/route.ts (Next.js) — any framework with Request/Response works the same
+import { createChartAdvisor } from 'reportdeck/server';
+
+export const POST = createChartAdvisor({
+  provider: 'gemini',                        // 'gemini' | 'openai' | 'anthropic' | 'openai-compatible' | custom
+  apiKey: process.env.GEMINI_API_KEY,
+  authorize: async (req) => isLoggedIn(req), // strongly recommended: otherwise anyone can spend your credits
+});
+```
+
+Express (or anything else): call `suggestCharts` directly.
+
+```ts
+app.post('/api/chart-advisor', express.json(), requireLogin, async (req, res) => {
+  try {
+    res.json(await suggestCharts(req.body, { provider: 'openai', apiKey: process.env.OPENAI_API_KEY }));
+  } catch (e) {
+    res.status(e.status ?? 500).json({ error: 'AI suggestions are unavailable' });
+  }
+});
+```
+
+| Provider | Default model | API used |
+|---|---|---|
+| `gemini` | `gemini-3.8-flash` | Interactions API with a JSON-schema response format |
+| `openai` | `gpt-6-astra` | Responses API with strict JSON schema |
+| `anthropic` | `claude-opus-5-5` | Messages API with structured output at `low` effort; server-side refusal fallback enabled |
+| `openai-compatible` | — (set `model` + `baseURL`) | Chat Completions — Ollama, OpenRouter, Groq, Azure OpenAI, … |
+| custom | — | `{ generate({ system, prompt, schema, signal }) }` — any model you like |
+
+Override `model` freely. Other options: `privacy` (the most the server forwards, whatever the browser claims — default `summary`), `maxSuggestions`, `timeoutMs` (30 s), `cacheTtlMs` (identical requests are cached for 10 minutes), `maxBodyBytes`, `onError`.
+
+**Security notes**
+
+- Keys live in server environment variables; the browser bundle never contains them.
+- Add `authorize` (session check, rate limit) — an open endpoint is a free AI proxy for anyone who finds it.
+- The AI's answer is plain data validated against your columns. Nothing it returns is executed, so column names or labels that try to "instruct" the model can at worst produce an odd title, which React renders as text.
+- Provider errors are logged through `onError` but never forwarded to the browser.
+
+The building blocks are exported from `reportdeck/core` for custom UIs: `profileData`, `redactProfile`, `recommendCharts`, `validateSpec`, `compileSpec`, `applyTransform`, `buildAdvisorPrompt`, `advisorResponseSchema`.
 
 ## Formatting
 

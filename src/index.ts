@@ -51,6 +51,10 @@ export type { DataTableColumn, DataTableProps, SortDirection } from './react/Dat
 export { computeDelta, Sparkline, StatCard, StatGroup } from './react/StatCard';
 export type { DeltaInfo, SparklineProps, StatCardProps } from './react/StatCard';
 export { Report, useReport, useReportItem } from './react/report';
+export { AutoChart } from './react/AutoChart';
+export type { AutoChartProps } from './react/AutoChart';
+export { profileData, recommendCharts, validateSpec } from './core';
+export type { ChartKind, ChartSpec, DataProfile, PrivacyLevel } from './core';
 export type { ReportProps, UseReportResult } from './react/report';
 export { DownloadMenu } from './react/DownloadMenu';
 export type { DownloadFormat, DownloadMenuProps } from './react/DownloadMenu';

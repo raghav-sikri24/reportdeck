@@ -168,7 +168,31 @@ function kpis(range: number) {
   };
 }
 
+/** Raw, transaction-level rows — what a backend usually returns before any aggregation. */
+function payments() {
+  const rand = seeded(31);
+  const channels = ['UPI', 'Card', 'Netbanking', 'Wallet', 'EMI'];
+  const regions = ['North', 'South', 'East', 'West'];
+  const merchants = ['Grocery', 'Travel', 'Electronics', 'Fashion', 'Bills', 'Food delivery'];
+  const end = new Date(2026, 9, 26);
+  return Array.from({ length: 2400 }, (_, i) => {
+    const d = new Date(end.getFullYear(), end.getMonth(), end.getDate() - Math.floor(rand() * 270), Math.floor(rand() * 24));
+    const channel = channels[Math.min(4, Math.floor(rand() ** 1.6 * 5))]!;
+    return {
+      payment_id: `PAY-${100000 + i}`,
+      created_at: d.toISOString(),
+      channel,
+      region: regions[Math.floor(rand() * 4)],
+      merchant_category: merchants[Math.floor(rand() * merchants.length)],
+      amount: Math.round((channel === 'EMI' ? 18000 : 900) * (0.3 + rand() * 1.7)),
+      fee: Math.round(rand() * 40) / 2,
+      status: rand() < 0.93 ? 'Success' : 'Failed',
+    };
+  });
+}
+
 const routes: Record<string, (params: Record<string, unknown>) => unknown> = {
+  '/api/payments': () => ({ data: payments() }),
   '/api/revenue/monthly': (p) => ({ data: monthly(Number(p.range) >= 365 ? 24 : 12) }),
   '/api/users/daily': (p) => daily(Number(p.range) || 90),
   '/api/revenue/channels': () => ({ items: channels }),
@@ -196,6 +220,17 @@ function wait(ms: number, signal: AbortSignal) {
 }
 
 export const mockFetcher: Fetcher = async (request, { signal }) => {
+  // The chart advisor is a real endpoint served by the Vite dev server (see vite.config.ts).
+  if (request.url === '/api/chart-advisor') {
+    const res = await fetch(request.url, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(request.body),
+      signal,
+    });
+    if (!res.ok) throw Object.assign(new Error(`Advisor error ${res.status}`), { status: res.status });
+    return res.json();
+  }
   await wait((settings.slow ? 1800 : 350) + Math.random() * 400, signal);
   if (settings.fail) throw Object.assign(new Error('Service unavailable'), { status: 503 });
   const route = routes[request.url];

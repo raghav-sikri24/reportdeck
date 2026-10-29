@@ -63,3 +63,15 @@ export {
   treemapModules,
 } from './modules';
 export type { EChartsModule } from './modules';
+
+// AI-assisted chart selection (framework-agnostic parts).
+export { findColumn, minPrivacy, profileData, redactProfile } from '../ai/profile';
+export type { ColumnKind, ColumnProfile, DataProfile, PrivacyLevel, TimeGrain } from '../ai/profile';
+export { applyTransform, startOfUnit } from '../ai/transform';
+export type { AggregateOp, Measure, TimeUnit, TransformResult, TransformSpec } from '../ai/transform';
+export { advisorResponseSchema, CHART_KINDS, compileSpec, pickTimeUnit, specKey, specToTransform, validateSpec } from '../ai/spec';
+export type { ChartKind, ChartSpec, CompiledView, ComponentName, ValidationResult } from '../ai/spec';
+export { parseTimeWindow, recommendCharts } from '../ai/recommend';
+export type { RecommendOptions } from '../ai/recommend';
+export { buildAdvisorPrompt } from '../ai/prompt';
+export type { AdvisorPrompt } from '../ai/prompt';

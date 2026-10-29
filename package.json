@@ -1,7 +1,7 @@
 {
   "name": "reportdeck",
-  "version": "0.1.1",
-  "description": "Backend-driven React charts, KPI cards, tables and reports with one-click PNG, SVG, CSV, Excel and PDF export.",
+  "version": "0.2.0",
+  "description": "Backend-driven React charts, KPI cards, tables and reports with one-click PNG, SVG, CSV, Excel and PDF export \u2014 plus an AI chart picker for raw data.",
   "keywords": [
     "react",
     "charts",
@@ -12,7 +12,13 @@
     "export",
     "pdf",
     "excel",
-    "csv"
+    "csv",
+    "ai",
+    "auto-chart",
+    "chart-recommendation",
+    "gemini",
+    "openai",
+    "claude"
   ],
   "homepage": "https://github.com/raghav-sikri24/reportdeck#readme",
   "bugs": {
@@ -94,7 +100,21 @@
   },
   "peerDependencies": {
     "react": ">=18",
-    "react-dom": ">=18"
+    "react-dom": ">=18",
+    "@anthropic-ai/sdk": ">=1.0.0",
+    "@google/genai": ">=2.3.0",
+    "openai": ">=6.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@anthropic-ai/sdk": {
+      "optional": true
+    },
+    "@google/genai": {
+      "optional": true
+    },
+    "openai": {
+      "optional": true
+    }
   },
   "dependencies": {
     "echarts": "^6.1.0",
@@ -103,8 +123,10 @@
     "jspdf-autotable": "^5.0.9"
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "^1.3.0",
     "@arethetypeswrong/cli": "^0.18.5",
     "@eslint/js": "^9.39.5",
+    "@google/genai": "^2.31.0",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.8",
@@ -116,6 +138,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.13.0",
     "jsdom": "^27.0.1",
+    "openai": "^7.45.1",
     "publint": "^0.3.25",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
